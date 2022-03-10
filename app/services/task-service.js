@@ -1,26 +1,42 @@
-import { ApplicationSettings } from "@nativescript/core";
-import { SnackBar } from "@nstudio/nativescript-snackbar";
+import { ApplicationSettingsService } from "./application-settings-service";
 
-export default class TaskServise {
-    addTask(task) {
-        ApplicationSettings.setBoolean("task", JSON.stringify(task));
-    }
+export const STORAGE_KEY = "tasks";
 
-    getAllTasks() {
-        const tasks = ApplicationSettings.getAllKeys("task")
-        const result = []
-        if (tasks) {
-            rawTodo = Array(JSON.parse(tasks))
-            rawTodo.forEach(task => {
-                result.push(task)
-            });
-            return result
-        }
-        return []
-    }
+export const TaskService = {
+  getAllTasks() {
+    return ApplicationSettingsService.getStringItem(STORAGE_KEY, []);
+  },
 
-    removeTask(task) {
-        ApplicationSettings.remove("completed", task.completed);
-        ApplicationSettings.remove("title", tasl.title);
+  setTasks(tasks) {
+    console.log("Start setting");
+    ApplicationSettingsService.setStringItem(STORAGE_KEY, tasks);
+    console.log("success");
+  },
+
+  getTaskById(taskID) {
+    const items = TaskService.getAllTasks();
+    const index = items.findIndex((task) => task.id === taskID);
+    if (index === -1) {
+      return;
     }
-}
+    return items[index];
+  },
+
+  updateItem(taskID, payload) {
+    const items = TaskService.getAllTasks();
+    const index = items.findIndex((task) => task.id === taskID);
+    if (index === -1) {
+      items.push(payload);
+    } else {
+      items.splice(index, 1, payload);
+    }
+    TaskService.setTasks(items);
+  },
+
+  removeTask(taskID) {
+    const items = TaskService.getAllTasks();
+    const index = items.findIndex((item) => item.id === taskID);
+    items.splice(index, 1)
+    TaskService.setTasks(items);
+  },
+};

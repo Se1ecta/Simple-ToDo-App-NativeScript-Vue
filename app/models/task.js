@@ -1,15 +1,19 @@
-import { EventData, Observable } from 'data/observable';
+import { EventData, Observable } from "data/observable";
+import { random } from "../helpers/random";
 
 class Task extends Observable {
-    title;
-    completed = false;
+  id;
+  description;
+  title;
+  completed = false;
 
-    constructor(title, completed = false) {
-        super();
-
-        this.text = text;
-        this.completed = completed
-    }
+  constructor(title, completed = false) {
+    super();
+    this.id = random();
+    this.title = title;
+    this.completed = completed;
+    this.description = this.description;
+  }
 }
 
 export default Task;
